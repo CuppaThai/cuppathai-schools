@@ -3,8 +3,21 @@ export interface Props {
   title: string;
   description?: string;
   lang?: 'th' | 'en';
+  currentSlug?: string;
 }
-const { title, description, lang = 'th' } = Astro.props;
+const { title, description, lang = 'th', currentSlug } = Astro.props;
+
+const modules = import.meta.glob('/src/documents/**/*.mdx', { eager: true });
+const navItems = Object.entries(modules)
+  .map(([path, mod]) => {
+    const match = path.match(/\/src\/documents\/(th|en)\/(.+)\.mdx$/);
+    if (!match || match[1] !== lang) return null;
+    const slug = match[2].replace(/\/index$/, '');
+    const fm = mod.frontmatter || {};
+    return { slug, navTitle: fm.title || slug, order: fm.order ?? 999 };
+  })
+  .filter(Boolean)
+  .sort((a, b) => a.order - b.order);
 ---
 <!DOCTYPE html>
 <html lang={lang}>
@@ -66,6 +79,32 @@ const { title, description, lang = 'th' } = Astro.props;
       .lang-switch a:hover:not(.active) {
         background: #D5C8B8;
       }
+      .doc-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #EDE9E2;
+      }
+      .doc-nav a {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 40px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: #7A6A5A;
+        background: #F2EFEA;
+        transition: all 0.2s;
+      }
+      .doc-nav a.active {
+        background: #7F2824;
+        color: #fff;
+      }
+      .doc-nav a:hover:not(.active) {
+        background: #D5C8B8;
+      }
       @media (max-width: 600px) {
         .container { padding: 1.5rem 1rem; }
         h1 { font-size: 1.6rem; }
@@ -79,6 +118,19 @@ const { title, description, lang = 'th' } = Astro.props;
         <a href="/th/" class={lang === 'th' ? 'active' : ''}>ไทย</a>
         <a href="/en/" class={lang === 'en' ? 'active' : ''}>EN</a>
       </div>
+      <nav class="doc-nav">
+        <a href={`/${lang}/`} class={!currentSlug ? 'active' : ''}>
+          {lang === 'th' ? '📚 สารบัญ' : '📚 Contents'}
+        </a>
+        {navItems.map((item) => (
+          <a
+            href={`/${lang}/${item.slug}/`}
+            class={currentSlug === item.slug ? 'active' : ''}
+          >
+            {item.navTitle}
+          </a>
+        ))}
+      </nav>
       <slot />
     </div>
   </body>
