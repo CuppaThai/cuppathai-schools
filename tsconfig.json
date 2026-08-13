@@ -1,13 +1,5 @@
-import { defineCollection, z } from 'astro:content';
-
-const docs = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    description: z.string().optional(),
-    order: z.number().optional(),
-    lang: z.enum(['th', 'en']),
-  }),
-});
-
-export const collections = { docs };
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"]
+}
