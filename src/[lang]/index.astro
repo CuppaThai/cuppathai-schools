@@ -1,0 +1,22 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+
+export async function getStaticPaths() {
+  return [{ params: { lang: 'th' } }, { params: { lang: 'en' } }];
+}
+
+const { lang } = Astro.params;
+---
+
+<DocLayout title={lang === 'th' ? 'คู่มือ CuppaThai' : 'CuppaThai Guide'} lang={lang}>
+  <h1>{lang === 'th' ? '📘 คู่มือการใช้งาน CuppaThai' : '📘 CuppaThai Instruction Book'}</h1>
+  
+  <h2>{lang === 'th' ? '📚 สารบัญ' : '📚 Table of Contents'}</h2>
+  <ul>
+    <li><a href={`/${lang}/01-getting-started/`}>{lang === 'th' ? 'เริ่มต้นใช้งาน' : 'Getting Started'}</a></li>
+    <li><a href={`/${lang}/02-director/`}>{lang === 'th' ? '👨‍💼 คู่มือผู้บริหาร' : '👨‍💼 Director Guide'}</a></li>
+    <li><a href={`/${lang}/03-teacher/`}>{lang === 'th' ? '👩‍🏫 คู่มือครู' : '👩‍🏫 Teacher Guide'}</a></li>
+    <li><a href={`/${lang}/04-student/`}>{lang === 'th' ? '🧑‍🎓 คู่มือนักเรียน' : '🧑‍🎓 Student Guide'}</a></li>
+    <li><a href={`/${lang}/05-demo/`}>{lang === 'th' ? '🎯 ข้อมูลสาธิต' : '🎯 Demo Credentials'}</a></li>
+  </ul>
+</DocLayout>
