@@ -1,10 +1,6 @@
 {
   "name": "cuppathai-schools",
-  "type": "module",
-  "version": "0.0.1",
-  "engines": {
-    "node": ">=22.12.0"
-  },
+  "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -12,6 +8,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^7.2.0"
+    "@astrojs/mdx": "^3.0.0",
+    "@astrojs/sitemap": "^3.0.0",
+    "astro": "^4.0.0"
   }
 }
