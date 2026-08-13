@@ -1,0 +1,42 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+
+export async function getStaticPaths() {
+  const allDocs = import.meta.glob('/src/documents/**/*.mdx');
+  const paths = [];
+  
+  for (const path in allDocs) {
+    const match = path.match(/\/src\/documents\/(th|en)\/(.+)\.mdx$/);
+    if (match) {
+      const [, lang, slug] = match;
+      paths.push({ params: { lang, slug: slug.replace(/\/index$/, '') } });
+    }
+  }
+  
+  return paths;
+}
+
+const { lang, slug } = Astro.params;
+
+const contentPath = `/src/documents/${lang}/${slug}.mdx`;
+let content;
+try {
+  const module = await import(contentPath);
+  content = module;
+} catch (e) {
+  const indexPath = `/src/documents/${lang}/${slug}/index.mdx`;
+  try {
+    const module = await import(indexPath);
+    content = module;
+  } catch (e2) {
+    return new Response(null, { status: 404 });
+  }
+}
+
+const { title, description } = content.frontmatter || { title: 'Page', description: '' };
+const Content = content.default;
+---
+
+<DocLayout title={title} description={description} lang={lang}>
+  <Content />
+</DocLayout>
