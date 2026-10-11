@@ -1,0 +1,7 @@
+{
+  "repo": "CuppaThai/cuppathai-schools",
+  "neverInclude": "\\.(png|jpe?g|webp|svg|mp3|mp4|woff2?|ico|pdf|zip|epub)$|package-lock\\.json$|^docs/book/module-",
+  "modules": [
+    { "id": "schools-guide", "header": "docs/book/schools-guide.header.md", "out": "docs/book/module-schools-guide.md", "rest": true }
+  ]
+}
