@@ -40,10 +40,12 @@ flowchart TD
 
 ## Part 2. File map (full web addresses)
 
+- https://github.com/CuppaThai/cuppathai-schools/blob/main/.github/workflows/book-check.yml  (1215 bytes)
 - https://github.com/CuppaThai/cuppathai-schools/blob/main/.gitignore  (264 bytes)
 - https://github.com/CuppaThai/cuppathai-schools/blob/main/.vscode/extensions.json  (87 bytes)
 - https://github.com/CuppaThai/cuppathai-schools/blob/main/.vscode/launch.json  (207 bytes)
 - https://github.com/CuppaThai/cuppathai-schools/blob/main/AGENTS.md  (874 bytes)
+- https://github.com/CuppaThai/cuppathai-schools/blob/main/CLAUDE.md  (644 bytes)
 - https://github.com/CuppaThai/cuppathai-schools/blob/main/README.md  (1657 bytes)
 - https://github.com/CuppaThai/cuppathai-schools/blob/main/astro.config.mjs  (217 bytes)
 - https://github.com/CuppaThai/cuppathai-schools/blob/main/docs/book/modules.json  (317 bytes)
@@ -73,7 +75,44 @@ flowchart TD
 
 ## Part 3. The code
 
-Generated 2026-10-11 from the current `main` branch. Each file starts with "FILE: name".
+Generated 2026-11-09 from the current `main` branch. Each file starts with "FILE: name".
+
+### FILE: .github/workflows/book-check.yml
+https://github.com/CuppaThai/cuppathai-schools/blob/main/.github/workflows/book-check.yml
+
+```yaml
+name: Book check
+
+# Fails a pull request when the instruction book in docs/book is out of date, so the book cannot drift from the code.
+# It rebuilds the book from the code and compares it with what is committed (the "Generated <date>" line is ignored).
+# To fix a failure: run  node scripts/build-module-book.mjs  and commit the rebuilt files in docs/book.
+# This check only reads. It never changes the repository and never deploys anything.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  book:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Rebuild the book from the code
+        run: node scripts/build-module-book.mjs
+      - name: Fail if the committed book is out of date
+        run: |
+          IGNORE='^Generated [0-9]{4}-[0-9]{2}-[0-9]{2} from the current'
+          if ! git diff --quiet -I"$IGNORE" -- docs/book; then
+            echo "::error::The book in docs/book is out of date. Run: node scripts/build-module-book.mjs  and commit the result."
+            git diff --stat -I"$IGNORE" -- docs/book
+            exit 1
+          fi
+          echo "The book is up to date."
+```
 
 ### FILE: .gitignore
 https://github.com/CuppaThai/cuppathai-schools/blob/main/.gitignore
@@ -159,6 +198,17 @@ Consult these guides before working on related tasks:
 - [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
 - [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
 ~~~~
+
+### FILE: CLAUDE.md
+https://github.com/CuppaThai/cuppathai-schools/blob/main/CLAUDE.md
+
+```md
+# Notes for Claude
+
+- **Start here for the whole system:** the book index https://github.com/CuppaThai/cuppathai-site/blob/main/docs/book/NICKOSYSTEMS-BOOK-INDEX.md has a "Where is it?" table (which repository and file for each job), every repository, every Cloudflare Worker and how each is deployed. This repository's own book file: `docs/book/module-schools-guide.md`.
+- The book is rebuilt with `node scripts/build-module-book.mjs`; put the rebuilt book in the same pull request as any change to the code.
+- Rules for Joe: plain words, click-by-click steps, ask "OK to put this live?" before merging. Never paste tokens or secrets in chat.
+```
 
 ### FILE: README.md
 https://github.com/CuppaThai/cuppathai-schools/blob/main/README.md
