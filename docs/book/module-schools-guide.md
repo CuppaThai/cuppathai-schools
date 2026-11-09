@@ -40,6 +40,7 @@ flowchart TD
 
 ## Part 2. File map (full web addresses)
 
+- https://github.com/CuppaThai/cuppathai-schools/blob/main/.github/workflows/book-check.yml  (1215 bytes)
 - https://github.com/CuppaThai/cuppathai-schools/blob/main/.gitignore  (264 bytes)
 - https://github.com/CuppaThai/cuppathai-schools/blob/main/.vscode/extensions.json  (87 bytes)
 - https://github.com/CuppaThai/cuppathai-schools/blob/main/.vscode/launch.json  (207 bytes)
@@ -75,6 +76,43 @@ flowchart TD
 ## Part 3. The code
 
 Generated 2026-11-09 from the current `main` branch. Each file starts with "FILE: name".
+
+### FILE: .github/workflows/book-check.yml
+https://github.com/CuppaThai/cuppathai-schools/blob/main/.github/workflows/book-check.yml
+
+```yaml
+name: Book check
+
+# Fails a pull request when the instruction book in docs/book is out of date, so the book cannot drift from the code.
+# It rebuilds the book from the code and compares it with what is committed (the "Generated <date>" line is ignored).
+# To fix a failure: run  node scripts/build-module-book.mjs  and commit the rebuilt files in docs/book.
+# This check only reads. It never changes the repository and never deploys anything.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  book:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Rebuild the book from the code
+        run: node scripts/build-module-book.mjs
+      - name: Fail if the committed book is out of date
+        run: |
+          IGNORE='^Generated [0-9]{4}-[0-9]{2}-[0-9]{2} from the current'
+          if ! git diff --quiet -I"$IGNORE" -- docs/book; then
+            echo "::error::The book in docs/book is out of date. Run: node scripts/build-module-book.mjs  and commit the result."
+            git diff --stat -I"$IGNORE" -- docs/book
+            exit 1
+          fi
+          echo "The book is up to date."
+```
 
 ### FILE: .gitignore
 https://github.com/CuppaThai/cuppathai-schools/blob/main/.gitignore
