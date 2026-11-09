@@ -44,6 +44,7 @@ flowchart TD
 - https://github.com/CuppaThai/cuppathai-schools/blob/main/.vscode/extensions.json  (87 bytes)
 - https://github.com/CuppaThai/cuppathai-schools/blob/main/.vscode/launch.json  (207 bytes)
 - https://github.com/CuppaThai/cuppathai-schools/blob/main/AGENTS.md  (874 bytes)
+- https://github.com/CuppaThai/cuppathai-schools/blob/main/CLAUDE.md  (644 bytes)
 - https://github.com/CuppaThai/cuppathai-schools/blob/main/README.md  (1657 bytes)
 - https://github.com/CuppaThai/cuppathai-schools/blob/main/astro.config.mjs  (217 bytes)
 - https://github.com/CuppaThai/cuppathai-schools/blob/main/docs/book/modules.json  (317 bytes)
@@ -73,7 +74,7 @@ flowchart TD
 
 ## Part 3. The code
 
-Generated 2026-10-11 from the current `main` branch. Each file starts with "FILE: name".
+Generated 2026-11-09 from the current `main` branch. Each file starts with "FILE: name".
 
 ### FILE: .gitignore
 https://github.com/CuppaThai/cuppathai-schools/blob/main/.gitignore
@@ -159,6 +160,17 @@ Consult these guides before working on related tasks:
 - [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
 - [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
 ~~~~
+
+### FILE: CLAUDE.md
+https://github.com/CuppaThai/cuppathai-schools/blob/main/CLAUDE.md
+
+```md
+# Notes for Claude
+
+- **Start here for the whole system:** the book index https://github.com/CuppaThai/cuppathai-site/blob/main/docs/book/NICKOSYSTEMS-BOOK-INDEX.md has a "Where is it?" table (which repository and file for each job), every repository, every Cloudflare Worker and how each is deployed. This repository's own book file: `docs/book/module-schools-guide.md`.
+- The book is rebuilt with `node scripts/build-module-book.mjs`; put the rebuilt book in the same pull request as any change to the code.
+- Rules for Joe: plain words, click-by-click steps, ask "OK to put this live?" before merging. Never paste tokens or secrets in chat.
+```
 
 ### FILE: README.md
 https://github.com/CuppaThai/cuppathai-schools/blob/main/README.md
